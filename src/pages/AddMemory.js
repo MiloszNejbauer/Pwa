@@ -55,9 +55,9 @@ function AddMemory() {
     try {
       const mediaStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
       setStream(mediaStream);
-      if (videoRef.current) {
-        videoRef.current.srcObject = mediaStream;
-      }
+      // if (videoRef.current) {
+      //   videoRef.current.srcObject = mediaStream;
+      // }
       setIsCameraActive(true);
     } catch (err) {
       console.error('Błąd dostępu do kamery:', err);
