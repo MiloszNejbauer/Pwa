@@ -20,9 +20,6 @@ function Home() {
           <button>Album</button>
         </Link>
 
-        <Link to="/Camera">
-          <button>Camera</button>
-        </Link>
       </div>
     </div>
   );
