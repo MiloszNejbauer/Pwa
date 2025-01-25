@@ -123,6 +123,8 @@ function AddMemory() {
     // eslint-disable-next-line
   }, [stream]);
 
+  
+
   return (
     <div>
       <h1>Add Memory</h1>
@@ -135,6 +137,13 @@ function AddMemory() {
         {isCameraActive && (
           <button onClick={capturePhoto}>Take Photo</button>
         )}
+        <button onClick={() => {
+  console.log('Clicked the button');
+  alert('Button clicked!');
+  startCamera(); 
+}}>
+  Start Camera (Debug)
+</button>
       </div>
 
       <div style={{ marginBottom: '1rem' }}>
