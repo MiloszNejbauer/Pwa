@@ -18,13 +18,6 @@ function AddMemory() {
     return saved ? JSON.parse(saved) : [];
   });
 
-  const [logs, setLogs] = useState([]);  // <-- tablica komunikatów
-
-  const addLog = (msg) => {
-    // Dodajemy komunikat na początek listy (lub koniec – wg uznania)
-    setLogs((prev) => [msg, ...prev]);
-  };
-
   // 1. Automatyczne pobranie lokalizacji (reverse geocoding) po pierwszym renderze
   useEffect(() => {
     fetchLocation();
