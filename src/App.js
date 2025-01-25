@@ -1,8 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import Home from './pages/Home';
-import Camera from './pages/Camera';
-import Location from './pages/Location';
+import Memories from './pages/Memories';
 
 function App() {
   return (
@@ -11,17 +10,13 @@ function App() {
         <nav>
           <ul style={{ display: 'flex', gap: '1rem', listStyle: 'none' }}>
             <li><Link to="/">Home</Link></li>
-            <li><Link to="/camera">Camera</Link></li>
-            <li><Link to="/location">Location</Link></li>
+            <li><Link to="/memories">Memories</Link></li>
           </ul>
         </nav>
-
         <hr />
-
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/camera" element={<Camera />} />
-          <Route path="/location" element={<Location />} />
+          <Route path="/memories" element={<Memories />} />
         </Routes>
       </div>
     </Router>
