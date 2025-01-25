@@ -1,24 +1,14 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 
-function AddMemory() {
-  const videoRef = useRef(null);
-
-  // Stan strumienia i flaga, czy kamera jest aktywna
-  const [stream, setStream] = useState(null);
-  const [isCameraActive, setIsCameraActive] = useState(false);
-
-  // Dane wspomnienia
+function AddMemoryInputFile() {
   const [photo, setPhoto] = useState(null);
   const [description, setDescription] = useState('');
   const [location, setLocation] = useState('');
-
-  // Wczytujemy zapisane wspomnienia z localStorage
   const [memories, setMemories] = useState(() => {
     const saved = localStorage.getItem('memories');
     return saved ? JSON.parse(saved) : [];
   });
 
-  // 1. Automatyczne pobranie lokalizacji (reverse geocoding) po pierwszym renderze
   useEffect(() => {
     fetchLocation();
   }, []);
@@ -29,6 +19,7 @@ function AddMemory() {
         async (position) => {
           const lat = position.coords.latitude;
           const lng = position.coords.longitude;
+          // Wstaw swój reverse geocoding, np. BigDataCloud
           try {
             const res = await fetch(
               `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lng}&localityLanguage=en`
@@ -37,7 +28,7 @@ function AddMemory() {
             setLocation(data.city || data.locality || `${lat},${lng}`);
           } catch (error) {
             console.error('Błąd reverse geocoding:', error);
-            setLocation(`(${lat}, ${lng})`); // fallback
+            setLocation(`(${lat}, ${lng})`);
           }
         },
         (err) => {
@@ -50,52 +41,22 @@ function AddMemory() {
     }
   };
 
-  // 2. Uruchomienie kamery
-  const startCamera = async () => {
-    try {
-      const mediaStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
-      setStream(mediaStream);
-      // if (videoRef.current) {
-      //   videoRef.current.srcObject = mediaStream;
-      // }
-      setIsCameraActive(true);
-    } catch (err) {
-      console.error('Błąd dostępu do kamery:', err);
-    }
+  // Handler dla inputa plików
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    // Odczytaj plik jako base64 (data URL)
+    const reader = new FileReader();
+    reader.onload = () => {
+      setPhoto(reader.result); 
+    };
+    reader.readAsDataURL(file);
   };
 
-  // 3. Zrobienie zdjęcia (canvas) + wyłączenie kamery
-  const capturePhoto = () => {
-    if (!videoRef.current) return;
-
-    // Stworzenie <canvas> i przechwycenie klatki z <video>
-    const canvas = document.createElement('canvas');
-    canvas.width = videoRef.current.videoWidth;
-    canvas.height = videoRef.current.videoHeight;
-    const ctx = canvas.getContext('2d');
-    ctx.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
-
-    // Konwersja do base64 i zapis w stanie
-    const dataUrl = canvas.toDataURL('image/png');
-    setPhoto(dataUrl);
-
-    // Wyłączenie kamery
-    stopCamera();
-  };
-
-  // 4. Zatrzymanie kamery
-  const stopCamera = () => {
-    if (stream) {
-      stream.getTracks().forEach(track => track.stop());
-    }
-    setIsCameraActive(false);
-    setStream(null);
-  };
-
-  // 5. Zapis wspomnienia
   const saveMemory = () => {
     if (!photo) {
-      alert('Najpierw zrób zdjęcie!');
+      alert('Najpierw wybierz lub zrób zdjęcie!');
       return;
     }
     const newMemory = {
@@ -108,73 +69,35 @@ function AddMemory() {
     setMemories(updatedMemories);
     localStorage.setItem('memories', JSON.stringify(updatedMemories));
 
-    // Czyścimy formularz
+    // Reset
     setPhoto(null);
     setDescription('');
     alert('Memory saved!');
   };
 
-  // 6. Gdy opuszczamy komponent (np. przejście do innej strony),
-  //    zatrzymujemy kamerę, jeśli jest aktywna
-  useEffect(() => {
-    return () => {
-      stopCamera();
-    };
-    // eslint-disable-next-line
-  }, [stream]);
-
-  
-
   return (
     <div>
-      <h1>Add Memory</h1>
+      <h1>Add Memory (via input)</h1>
 
       <div style={{ marginBottom: '1rem' }}>
-        {/* Przyciski sterujące */}
-        {!isCameraActive && !photo && (
-          <button onClick={startCamera}>Start Camera</button>
-        )}
-        {isCameraActive && (
-          <button onClick={capturePhoto}>Take Photo</button>
-        )}
-        <button onClick={() => {
-  console.log('Clicked the button');
-  alert('Button clicked!');
-  startCamera(); 
-}}>
-  Start Camera (Debug)
-</button>
+        {/* Input akceptuje obrazy i może otworzyć kamerę na telefonie */}
+        <input
+          type="file"
+          accept="image/*"
+          capture="camera"
+          onChange={handleFileChange}
+        />
       </div>
 
-      <div style={{ marginBottom: '1rem' }}>
-        {/* 
-          Jeśli kamera jest aktywna, pokaż <video>.
-          Jeśli nie – pokaż zdjęcie (o ile istnieje), albo placeholder.
-        */}
-        {isCameraActive ? (
-          <video
-            ref={videoRef}
-            autoPlay
-            playsInline
-            style={{ width: '300px', border: '1px solid #ccc', background: '#000' }}
+      <div style={{ marginBottom: '1rem', width: '300px', height: '225px', border: '1px solid #ccc' }}>
+        {photo ? (
+          <img
+            src={photo}
+            alt="Selected"
+            style={{ maxWidth: '100%', maxHeight: '100%', display: 'block', margin: 'auto' }}
           />
         ) : (
-          <div style={{ width: '300px', height: '225px', border: '1px solid #ccc', position: 'relative' }}>
-            {photo ? (
-              <img
-                src={photo}
-                alt="Captured"
-                style={{
-                  maxWidth: '100%',
-                  maxHeight: '100%',
-                  display: 'block',
-                  margin: 'auto'
-                }}
-              />
-            ) : (
-              <p style={{ textAlign: 'center' }}>No camera / no photo</p>
-            )}
-          </div>
+          <p style={{ textAlign: 'center' }}>No photo selected</p>
         )}
       </div>
 
@@ -196,4 +119,4 @@ function AddMemory() {
   );
 }
 
-export default AddMemory;
+export default AddMemoryInputFile;
