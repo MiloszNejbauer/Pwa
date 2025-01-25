@@ -18,82 +18,101 @@ function AddMemory() {
     return saved ? JSON.parse(saved) : [];
   });
 
+  const [logs, setLogs] = useState([]);  // <-- tablica komunikatów
+
+  const addLog = (msg) => {
+    // Dodajemy komunikat na początek listy (lub koniec – wg uznania)
+    setLogs((prev) => [msg, ...prev]);
+  };
+
   // 1. Automatyczne pobranie lokalizacji (reverse geocoding) po pierwszym renderze
   useEffect(() => {
     fetchLocation();
   }, []);
 
   const fetchLocation = async () => {
+    addLog('fetchLocation() start');
     if ('geolocation' in navigator) {
       navigator.geolocation.getCurrentPosition(
         async (position) => {
           const lat = position.coords.latitude;
           const lng = position.coords.longitude;
+          addLog(`Got coords lat=${lat}, lng=${lng}`);
           try {
             const res = await fetch(
               `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lng}&localityLanguage=en`
             );
+            if (!res.ok) {
+              addLog(`Reverse geocode not ok: ${res.status} ${res.statusText}`);
+            }
             const data = await res.json();
+            addLog(`Reverse geocode data: ${JSON.stringify(data)}`);
             setLocation(data.city || data.locality || `${lat},${lng}`);
           } catch (error) {
-            console.error('Błąd reverse geocoding:', error);
-            setLocation(`(${lat}, ${lng})`); // fallback
+            addLog(`Reverse geocoding error: ${error.message}`);
+            setLocation(`(${lat}, ${lng})`);
           }
         },
         (err) => {
-          console.error('Błąd geolokalizacji:', err);
+          addLog(`Geolocation error: ${err.message}`);
           setLocation('Nie udało się pobrać lokalizacji');
         }
       );
     } else {
+      addLog('Geolocation not available in this browser');
       setLocation('Geolokalizacja niedostępna w tej przeglądarce');
     }
   };
 
-  // 2. Uruchomienie kamery
   const startCamera = async () => {
+    addLog('startCamera() called');
     try {
       const mediaStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+      addLog('mediaStream acquired');
       setStream(mediaStream);
       if (videoRef.current) {
         videoRef.current.srcObject = mediaStream;
+        addLog('srcObject assigned to video');
       }
       setIsCameraActive(true);
+      addLog('setIsCameraActive(true)');
     } catch (err) {
+      addLog(`Camera error: ${err.name} - ${err.message}`);
       console.error('Błąd dostępu do kamery:', err);
     }
   };
 
-  // 3. Zrobienie zdjęcia (canvas) + wyłączenie kamery
   const capturePhoto = () => {
-    if (!videoRef.current) return;
-
-    // Stworzenie <canvas> i przechwycenie klatki z <video>
+    addLog('capturePhoto() called');
+    if (!videoRef.current) {
+      addLog('videoRef.current is null - cannot capture');
+      return;
+    }
     const canvas = document.createElement('canvas');
     canvas.width = videoRef.current.videoWidth;
     canvas.height = videoRef.current.videoHeight;
     const ctx = canvas.getContext('2d');
     ctx.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
 
-    // Konwersja do base64 i zapis w stanie
     const dataUrl = canvas.toDataURL('image/png');
     setPhoto(dataUrl);
+    addLog('Photo captured, dataUrl set');
 
-    // Wyłączenie kamery
     stopCamera();
   };
 
-  // 4. Zatrzymanie kamery
   const stopCamera = () => {
+    addLog('stopCamera() called');
     if (stream) {
       stream.getTracks().forEach(track => track.stop());
+      addLog('tracks stopped');
     }
     setIsCameraActive(false);
     setStream(null);
   };
 
-  // 5. Zapis wspomnienia
   const saveMemory = () => {
+    addLog('saveMemory() called');
     if (!photo) {
       alert('Najpierw zrób zdjęcie!');
       return;
@@ -107,17 +126,15 @@ function AddMemory() {
     const updatedMemories = [...memories, newMemory];
     setMemories(updatedMemories);
     localStorage.setItem('memories', JSON.stringify(updatedMemories));
-
-    // Czyścimy formularz
     setPhoto(null);
     setDescription('');
     alert('Memory saved!');
+    addLog('Memory saved to localStorage');
   };
 
-  // 6. Gdy opuszczamy komponent (np. przejście do innej strony),
-  //    zatrzymujemy kamerę, jeśli jest aktywna
   useEffect(() => {
     return () => {
+      addLog('Cleaning up - stopCamera()');
       stopCamera();
     };
     // eslint-disable-next-line
@@ -128,7 +145,6 @@ function AddMemory() {
       <h1>Add Memory</h1>
 
       <div style={{ marginBottom: '1rem' }}>
-        {/* Przyciski sterujące */}
         {!isCameraActive && !photo && (
           <button onClick={startCamera}>Start Camera</button>
         )}
@@ -138,10 +154,6 @@ function AddMemory() {
       </div>
 
       <div style={{ marginBottom: '1rem' }}>
-        {/* 
-          Jeśli kamera jest aktywna, pokaż <video>.
-          Jeśli nie – pokaż zdjęcie (o ile istnieje), albo placeholder.
-        */}
         {isCameraActive ? (
           <video
             ref={videoRef}
@@ -183,6 +195,14 @@ function AddMemory() {
       </div>
 
       <button onClick={saveMemory}>Save Memory</button>
+
+      <hr />
+      <h2>Debug Log:</h2>
+      <ul>
+        {logs.map((msg, idx) => (
+          <li key={idx} style={{ fontSize: '0.9rem' }}>{msg}</li>
+        ))}
+      </ul>
     </div>
   );
 }
