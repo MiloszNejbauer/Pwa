@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import Home from './pages/Home';
 import AddMemory from './pages/AddMemory';
 import MemoriesAlbum from './pages/MemoriesAlbum.js';
+import Camera from './pages/Camera.js';
 
 function App() {
   return (
