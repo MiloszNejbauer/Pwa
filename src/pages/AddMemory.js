@@ -14,20 +14,39 @@ function AddMemory() {
     return saved ? JSON.parse(saved) : [];
   });
 
-  // (Opcja) Automatyczne pobieranie lokalizacji
+  // 1. Po pierwszym załadowaniu komponentu automatycznie pobierz lokalizację
   useEffect(() => {
+    fetchLocation();
+  }, []);
+
+  // 2. Funkcja do pobrania lokalizacji (auto w useEffect)
+  const fetchLocation = async () => {
     if ('geolocation' in navigator) {
       navigator.geolocation.getCurrentPosition(
-        (pos) => {
-          const { latitude, longitude } = pos.coords;
-          setLocation(`${latitude}, ${longitude}`);
+        async (position) => {
+          const lat = position.coords.latitude;
+          const lng = position.coords.longitude;
+          try {
+            // Darmowe API (BigDataCloud), bez klucza; ewentualnie inna usługa
+            const res = await fetch(
+              `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lng}&localityLanguage=en`
+            );
+            const data = await res.json();
+            setLocation(data.city || data.locality || `${lat},${lng}`);
+          } catch (error) {
+            console.error('Błąd reverse geocoding:', error);
+            setLocation(`(${lat}, ${lng})`); // fallback
+          }
         },
         (err) => {
-          console.error('Geolocation error:', err);
+          console.error('Błąd geolokalizacji:', err);
+          setLocation('Nie udało się pobrać lokalizacji');
         }
       );
+    } else {
+      setLocation('Geolokalizacja niedostępna w tej przeglądarce');
     }
-  }, []);
+  };
 
   // 1. startCamera -> tak jak w starej wersji
   const startCamera = async () => {
