@@ -1,13 +1,16 @@
-// AddMemory.js
 import React, { useState, useRef, useEffect } from 'react';
 
 function AddMemory() {
   const videoRef = useRef(null);
+
+  // Stan strumienia i flaga, czy kamera jest aktywna
   const [stream, setStream] = useState(null);
+  const [isCameraActive, setIsCameraActive] = useState(false);
+
+  // Dane wspomnienia
   const [photo, setPhoto] = useState(null);
   const [description, setDescription] = useState('');
   const [location, setLocation] = useState('');
-  const [isCameraActive, setIsCameraActive] = useState(false);
 
   // Wczytujemy zapisane wspomnienia z localStorage
   const [memories, setMemories] = useState(() => {
@@ -15,12 +18,11 @@ function AddMemory() {
     return saved ? JSON.parse(saved) : [];
   });
 
-  // 1. Po pierwszym załadowaniu komponentu automatycznie pobierz lokalizację
+  // 1. Automatyczne pobranie lokalizacji (reverse geocoding) po pierwszym renderze
   useEffect(() => {
     fetchLocation();
   }, []);
 
-  // 2. Funkcja do pobrania lokalizacji (auto w useEffect)
   const fetchLocation = async () => {
     if ('geolocation' in navigator) {
       navigator.geolocation.getCurrentPosition(
@@ -28,7 +30,6 @@ function AddMemory() {
           const lat = position.coords.latitude;
           const lng = position.coords.longitude;
           try {
-            // Darmowe API (BigDataCloud), bez klucza; ewentualnie inna usługa
             const res = await fetch(
               `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lng}&localityLanguage=en`
             );
@@ -49,8 +50,8 @@ function AddMemory() {
     }
   };
 
-   // 3. Funkcja do uruchomienia kamery
-   const startCamera = async () => {
+  // 2. Uruchomienie kamery
+  const startCamera = async () => {
     try {
       const mediaStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
       setStream(mediaStream);
@@ -63,24 +64,38 @@ function AddMemory() {
     }
   };
 
-  // 2. capturePhoto -> rysujemy klatkę z <video> na <canvas>
+  // 3. Zrobienie zdjęcia (canvas) + wyłączenie kamery
   const capturePhoto = () => {
     if (!videoRef.current) return;
 
+    // Stworzenie <canvas> i przechwycenie klatki z <video>
     const canvas = document.createElement('canvas');
     canvas.width = videoRef.current.videoWidth;
     canvas.height = videoRef.current.videoHeight;
     const ctx = canvas.getContext('2d');
     ctx.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
 
+    // Konwersja do base64 i zapis w stanie
     const dataUrl = canvas.toDataURL('image/png');
     setPhoto(dataUrl);
+
+    // Wyłączenie kamery
+    stopCamera();
   };
 
-  // 3. saveMemory
+  // 4. Zatrzymanie kamery
+  const stopCamera = () => {
+    if (stream) {
+      stream.getTracks().forEach(track => track.stop());
+    }
+    setIsCameraActive(false);
+    setStream(null);
+  };
+
+  // 5. Zapis wspomnienia
   const saveMemory = () => {
     if (!photo) {
-      alert('Zrób zdjęcie!');
+      alert('Najpierw zrób zdjęcie!');
       return;
     }
     const newMemory = {
@@ -92,19 +107,20 @@ function AddMemory() {
     const updatedMemories = [...memories, newMemory];
     setMemories(updatedMemories);
     localStorage.setItem('memories', JSON.stringify(updatedMemories));
-    // czyszczenie formularza
+
+    // Czyścimy formularz
     setPhoto(null);
     setDescription('');
     alert('Memory saved!');
   };
 
-  // 4. Sprzątanie: po opuszczeniu komponentu zatrzymujemy strumień (opcjonalnie)
+  // 6. Gdy opuszczamy komponent (np. przejście do innej strony),
+  //    zatrzymujemy kamerę, jeśli jest aktywna
   useEffect(() => {
     return () => {
-      if (stream) {
-        stream.getTracks().forEach(track => track.stop());
-      }
+      stopCamera();
     };
+    // eslint-disable-next-line
   }, [stream]);
 
   return (
@@ -112,30 +128,45 @@ function AddMemory() {
       <h1>Add Memory</h1>
 
       <div style={{ marginBottom: '1rem' }}>
-        <button onClick={startCamera}>Start Camera</button>
-        <button onClick={capturePhoto}>Take Photo</button>
+        {/* Przyciski sterujące */}
+        {!isCameraActive && !photo && (
+          <button onClick={startCamera}>Start Camera</button>
+        )}
+        {isCameraActive && (
+          <button onClick={capturePhoto}>Take Photo</button>
+        )}
       </div>
 
-      <div style={{ display: 'flex', gap: '1rem', marginBottom: '1rem' }}>
-        <div>
+      <div style={{ marginBottom: '1rem' }}>
+        {/* 
+          Jeśli kamera jest aktywna, pokaż <video>.
+          Jeśli nie – pokaż zdjęcie (o ile istnieje), albo placeholder.
+        */}
+        {isCameraActive ? (
           <video
             ref={videoRef}
             autoPlay
             playsInline
             style={{ width: '300px', border: '1px solid #ccc', background: '#000' }}
           />
-        </div>
-        <div>
-          {photo ? (
-            <img
-              src={photo}
-              alt="Captured"
-              style={{ width: '300px', border: '1px solid #ccc' }}
-            />
-          ) : (
-            <p>No photo yet</p>
-          )}
-        </div>
+        ) : (
+          <div style={{ width: '300px', height: '225px', border: '1px solid #ccc', position: 'relative' }}>
+            {photo ? (
+              <img
+                src={photo}
+                alt="Captured"
+                style={{
+                  maxWidth: '100%',
+                  maxHeight: '100%',
+                  display: 'block',
+                  margin: 'auto'
+                }}
+              />
+            ) : (
+              <p style={{ textAlign: 'center' }}>No camera / no photo</p>
+            )}
+          </div>
+        )}
       </div>
 
       <div style={{ marginBottom: '1rem' }}>
