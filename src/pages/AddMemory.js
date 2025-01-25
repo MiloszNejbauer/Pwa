@@ -7,6 +7,7 @@ function AddMemory() {
   const [photo, setPhoto] = useState(null);
   const [description, setDescription] = useState('');
   const [location, setLocation] = useState('');
+  const [isCameraActive, setIsCameraActive] = useState(false);
 
   // Wczytujemy zapisane wspomnienia z localStorage
   const [memories, setMemories] = useState(() => {
@@ -48,14 +49,15 @@ function AddMemory() {
     }
   };
 
-  // 1. startCamera -> tak jak w starej wersji
-  const startCamera = async () => {
+   // 3. Funkcja do uruchomienia kamery
+   const startCamera = async () => {
     try {
       const mediaStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
       setStream(mediaStream);
       if (videoRef.current) {
         videoRef.current.srcObject = mediaStream;
       }
+      setIsCameraActive(true);
     } catch (err) {
       console.error('Błąd dostępu do kamery:', err);
     }
