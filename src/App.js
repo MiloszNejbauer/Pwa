@@ -2,7 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import Home from './pages/Home';
 import AddMemory from './pages/AddMemory';
-import MemoriesAlbum from './pages/MemoriesAlbum';
+import MemoriesAlbum from './pages/MemoriesAlbum.js';
 
 function App() {
   return (
@@ -13,6 +13,7 @@ function App() {
             <li><Link to="/">Home</Link></li>
             <li><Link to="/add-memory">Add Memory</Link></li>
             <li><Link to="/album">Memories Album</Link></li>
+            <li><Link to="/camera">camera</Link></li>
           </ul>
         </nav>
         <hr />
@@ -20,6 +21,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/add-memory" element={<AddMemory />} />
           <Route path="/album" element={<MemoriesAlbum />} />
+          <Route path="/camera" element={<Camera />} />
         </Routes>
       </div>
     </Router>
