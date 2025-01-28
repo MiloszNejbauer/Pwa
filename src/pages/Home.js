@@ -12,13 +12,6 @@ function Home() {
       </p>
       
       <div style={{ marginTop: '1rem' }}>
-        <Link to="/add-memory" style={{ marginRight: '1rem' }}>
-          <button>Add Memory</button>
-        </Link>
-
-        <Link to="/album">
-          <button>Album</button>
-        </Link>
 
       </div>
     </div>
