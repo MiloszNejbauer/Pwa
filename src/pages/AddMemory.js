@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import '../App.css';
 
 function AddMemoryInputFile() {
   const [photo, setPhoto] = useState(null);
@@ -77,7 +78,7 @@ function AddMemoryInputFile() {
 
   return (
     <div>
-      <h1>Add Memory (via input)</h1>
+      <h1>Add Memory</h1>
 
       <div style={{ marginBottom: '1rem' }}>
         {/* Input akceptuje obrazy i może otworzyć kamerę na telefonie */}
@@ -97,7 +98,7 @@ function AddMemoryInputFile() {
             style={{ maxWidth: '100%', maxHeight: '100%', display: 'block', margin: 'auto' }}
           />
         ) : (
-          <p style={{ textAlign: 'center' }}>No photo selected</p>
+          <p style={{ textAlign: 'center' }}>Take, or choose a pic</p>
         )}
       </div>
 

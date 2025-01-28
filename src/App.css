@@ -40,3 +40,98 @@
     transform: rotate(360deg);
   }
 }
+
+/* 1. Globalne reset/normowanie marginesów */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+    justify-content: center;
+  align-items: center;
+}
+
+/* 2. Styl ciała dokumentu: gradient tła i domyślna czcionka */
+body {
+  font-family: Arial, sans-serif;
+  /* Gradient: start (błękit) -> koniec (ciemny niebieski) */
+  background: linear-gradient(120deg, #ade0f4 0%, #00264d 100%);
+  min-height: 100vh;
+  color: #fff; /* Tekst na jasnym/ciemnym tle */
+  justify-content: center;
+  align-items: center;
+}
+
+/* 3. Opcjonalny kontener główny, żeby treść była zwarta */
+.container {
+  max-width: 600px; /* max szerokość na desktopie */
+  margin: 0 auto;
+  padding: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* 4. Nagłówki, odstępy */
+h1, h2, h3 {
+  margin-bottom: 1rem;
+  justify-content: center;
+  align-items: center;
+}
+
+p {
+  margin-bottom: 1rem;
+  justify-content: center;
+  align-items: center;
+}
+
+/* 5. Styl przycisków - lekko pomarańczowy */
+button {
+  background-color: #ff9933; 
+  border: none;
+  color: #fff;
+  padding: 0.6rem 1rem;
+  font-size: 1rem;
+  cursor: pointer;
+  border-radius: 4px;
+  margin-right: 0.5rem;
+  justify-content: center;
+  align-items: center;
+}
+
+button:hover {
+  opacity: 0.9; /* delikatny efekt przy najechaniu */
+}
+
+/* 6. Tagi input, textarea - podstawowe style */
+input, textarea {
+  width: 100%;
+  padding: 0.5rem;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  margin-bottom: 1rem;
+  font-size: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* 7. Responsywność 
+   Przy mniejszych ekranach poniżej 600px 
+   zwiększamy wewnętrzne odstępy, zmniejszamy font, itp.
+*/
+@media (max-width: 600px) {
+  .container {
+    padding: 0.5rem;
+  }
+  
+  button {
+    width: 100%;  /* przyciski na pełną szerokość na mobilkach */
+    margin-right: 0; 
+    margin-bottom: 0.5rem;
+  }
+  
+  p, h1, h2, h3 {
+    margin-bottom: 0.75rem;
+  }
+}
+

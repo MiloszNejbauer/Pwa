@@ -5,6 +5,12 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background: linear-gradient(120deg, #ade0f4 0%, #00264d 100%);
+  min-height: 100vh;       /* wypełnij całą wysokość ekranu */
+  display: flex;           /* Flexbox */
+  justify-content: center; /* wycentruj poziomo */
+  align-items: center;     /* wycentruj pionowo */
+  text-align: center;      /* dodatkowo wyśrodkowanie tekstu */
 }
 
 code {

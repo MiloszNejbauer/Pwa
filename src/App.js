@@ -9,11 +9,11 @@ function App() {
     <Router>
       <div>
         <nav>
-          <ul style={{ display: 'flex', gap: '1rem', listStyle: 'none' }}>
+          {/* <ul style={{ display: 'flex', gap: '1rem', listStyle: 'none' }}>
             <li><Link to="/">Home</Link></li>
             <li><Link to="/add-memory">Add Memory</Link></li>
             <li><Link to="/album">Memories Album</Link></li>
-          </ul>
+          </ul> */}
         </nav>
         <hr />
         <Routes>
