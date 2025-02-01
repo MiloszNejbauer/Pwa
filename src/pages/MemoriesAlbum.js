@@ -25,7 +25,7 @@ function MemoriesAlbum() {
       {memories.length === 0 ? (
         <p>No memories saved yet.</p>
       ) : (
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem' }}>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', margin: '1rem' }}>
           {memories.map((mem) => (
             <div key={mem.id} style={{ border: '1px solid #ccc', padding: '1rem' }}>
               <img src={mem.photo} alt="Captured" style={{ width: '200px' }} />

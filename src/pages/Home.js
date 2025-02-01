@@ -16,11 +16,10 @@ function Home() {
 
   return (
     <div>
-      <h1>Welcome to My Memories App</h1>
+      <h1>Memories App</h1>
       <p>
-        This application allows you to capture photos, add a short description and 
-        save the location where they were taken. You can then view all your saved 
-        memories in a dedicated album.
+        Aplikacja służąca do zapisywania wspomnień w albumie.
+        Zrób lub dodaj zdjęcie, dodaj opis i zapisz swoje wspomnienie.
       </p>
       
       <button onClick={goToAddMemory}>Add Memory</button>

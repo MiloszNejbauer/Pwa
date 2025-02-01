@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import '../App.css';
 import { useNavigate } from 'react-router-dom';
 
@@ -12,13 +12,17 @@ function AddMemoryInputFile() {
   });
   const navigate = useNavigate();
 
+  // Referencje do ukrytych inputów
+  const cameraInputRef = useRef(null);
+  const galleryInputRef = useRef(null);
+
   const goHome = () => {
     navigate('/');
-  }
+  };
 
   const goAlbum = () => {
     navigate('../album');
-  }
+  };
 
   useEffect(() => {
     fetchLocation();
@@ -30,7 +34,7 @@ function AddMemoryInputFile() {
         async (position) => {
           const lat = position.coords.latitude;
           const lng = position.coords.longitude;
-          // Wstaw swój reverse geocoding, np. BigDataCloud
+          // Użyj swojego reverse geocoding, np. BigDataCloud
           try {
             const res = await fetch(
               `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lng}&localityLanguage=en`
@@ -48,19 +52,18 @@ function AddMemoryInputFile() {
         }
       );
     } else {
-      setLocation('Geolokalizacja niedostępna w tej przeglądarce');
+      setLocation('Geolokalizacja niedostępna');
     }
   };
 
-  // Handler dla inputa plików
+  // Obsługa zmiany pliku (wspólna dla obu inputów)
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (!file) return;
 
-    // Odczytaj plik jako base64 (data URL)
     const reader = new FileReader();
     reader.onload = () => {
-      setPhoto(reader.result); 
+      setPhoto(reader.result);
     };
     reader.readAsDataURL(file);
   };
@@ -86,19 +89,48 @@ function AddMemoryInputFile() {
     alert('Memory saved!');
   };
 
+  // Funkcje wywołujące kliknięcie w ukryte inputy
+  const openCamera = () => {
+    if (cameraInputRef.current) {
+      cameraInputRef.current.click();
+    }
+  };
+
+  const openGallery = () => {
+    if (galleryInputRef.current) {
+      galleryInputRef.current.click();
+    }
+  };
+
   return (
     <div>
       <h1>Add Memory</h1>
 
-      <div style={{ marginBottom: '1rem', alignContent: 'center', justifyContent: 'center' }}>
-        {/* Input akceptuje obrazy i może otworzyć kamerę na telefonie */}
-        
-        <input
-          type="file"
-          accept="image/*"
-          capture="camera"
-          onChange={handleFileChange}
-        />
+      {/* Ukryty input do robienia zdjęcia (otwiera aparat) */}
+      <input
+        type="file"
+        accept="image/*"
+        capture="environment"
+        ref={cameraInputRef}
+        onChange={handleFileChange}
+        style={{ display: 'none' }}
+      />
+
+      {/* Ukryty input do dodawania zdjęcia z galerii */}
+      <input
+        type="file"
+        accept="image/*"
+        ref={galleryInputRef}
+        onChange={handleFileChange}
+        style={{ display: 'none' }}
+      />
+
+      {/* Przyciski, które otwierają odpowiednie inputy */}
+      <div style={{ marginBottom: '1rem' }}>
+        <button onClick={openCamera} style={{ marginRight: '1rem' }}>
+          Zrób zdjęcie
+        </button>
+        <button onClick={openGallery}>Dodaj zdjęcie</button>
       </div>
 
       <div style={{ marginBottom: '1rem', width: '300px', height: '225px', border: '0px solid #ccc' }}>
@@ -113,7 +145,7 @@ function AddMemoryInputFile() {
         )}
       </div>
 
-      <div style={{ marginBottom: '1rem', marginTop: '1rem'}}>
+      <div style={{ marginBottom: '1rem', marginTop: '1rem' }}>
         <label>Description:</label>
         <br />
         <textarea
