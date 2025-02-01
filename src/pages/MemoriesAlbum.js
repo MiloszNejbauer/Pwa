@@ -31,6 +31,7 @@ function MemoriesAlbum() {
               <img src={mem.photo} alt="Captured" style={{ width: '200px' }} />
               <p><strong>Description:</strong> {mem.description}</p>
               <p><strong>Location:</strong> {mem.location}</p>
+              <p><strong>Date: </strong> {mem.createdAt}</p>
             </div>
           ))}
         </div>

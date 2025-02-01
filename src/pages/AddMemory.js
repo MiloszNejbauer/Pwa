@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import '../App.css';
 import { useNavigate } from 'react-router-dom';
+import moment from 'moment';
 
 function AddMemoryInputFile() {
   const [photo, setPhoto] = useState(null);
@@ -10,6 +11,7 @@ function AddMemoryInputFile() {
     const saved = localStorage.getItem('memories');
     return saved ? JSON.parse(saved) : [];
   });
+
   const navigate = useNavigate();
 
   // Referencje do ukrytych inputów
@@ -78,6 +80,7 @@ function AddMemoryInputFile() {
       photo,
       description,
       location,
+      createdAt: new moment().format('LLLL'),
     };
     const updatedMemories = [...memories, newMemory];
     setMemories(updatedMemories);
