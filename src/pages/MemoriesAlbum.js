@@ -1,8 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import '../App.css';
+import { useNavigate } from 'react-router-dom';
 
 function MemoriesAlbum() {
   const [memories, setMemories] = useState([]);
+
+  const navigate = useNavigate();
+
+  const goHome = () => {
+    navigate('/')
+  }
 
   // Wczytujemy wspomnienia z localStorage
   useEffect(() => {
@@ -28,6 +35,7 @@ function MemoriesAlbum() {
           ))}
         </div>
       )}
+      <button onClick={goHome}>Back</button>
     </div>
   );
 }

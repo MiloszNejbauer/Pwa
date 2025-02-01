@@ -25,7 +25,7 @@
   align-items: center;
   justify-content: center;
   font-size: calc(10px + 2vmin);
-  color: white;
+  color: rgba(255, 255, 255, 0);
 }
 
 .App-link {
@@ -86,7 +86,7 @@ p {
 
 /* 5. Styl przycisków - lekko pomarańczowy */
 button {
-  background-color: #ff9933; 
+  background-color: #0000003a; 
   border: none;
   color: #fff;
   padding: 0.6rem 1rem;
@@ -99,20 +99,32 @@ button {
 }
 
 button:hover {
-  opacity: 0.9; /* delikatny efekt przy najechaniu */
+  opacity: 0.5; /* delikatny efekt przy najechaniu */
 }
 
 /* 6. Tagi input, textarea - podstawowe style */
-input, textarea {
+input {
   width: 100%;
   padding: 0.5rem;
-  border-radius: 4px;
-  border: 1px solid #ccc;
+  border-radius: 0px;
+  border: 0px solid #ccc;
   margin-bottom: 1rem;
   font-size: 1rem;
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+textarea {
+  width: 100%;
+  height: 150px;
+  padding: 12px 20px;
+  box-sizing: border-box;
+  border: 3px solid #0000003a;
+  border-radius: 10px;
+  background-color: #ffffff4b;
+  font-size: 16px;
+  resize: none;
 }
 
 /* 7. Responsywność 

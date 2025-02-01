@@ -1,7 +1,19 @@
 import React from 'react';
 import '../App.css';
+import { useNavigate } from 'react-router-dom';
 
 function Home() {
+
+  const navigate = useNavigate();
+
+  const goToAddMemory = () => {
+    navigate('./add-memory');
+  }
+
+  const goToAlbum = () => {
+    navigate('./album');
+  }
+
   return (
     <div>
       <h1>Welcome to My Memories App</h1>
@@ -11,9 +23,9 @@ function Home() {
         memories in a dedicated album.
       </p>
       
-      <div style={{ marginTop: '1rem' }}>
-
-      </div>
+      <button onClick={goToAddMemory}>Add Memory</button>
+      <button onClick={goToAlbum}>Album</button>
+      
     </div>
   );
 }

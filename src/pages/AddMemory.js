@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import '../App.css';
+import { useNavigate } from 'react-router-dom';
 
 function AddMemoryInputFile() {
   const [photo, setPhoto] = useState(null);
@@ -9,6 +10,15 @@ function AddMemoryInputFile() {
     const saved = localStorage.getItem('memories');
     return saved ? JSON.parse(saved) : [];
   });
+  const navigate = useNavigate();
+
+  const goHome = () => {
+    navigate('/');
+  }
+
+  const goAlbum = () => {
+    navigate('../album');
+  }
 
   useEffect(() => {
     fetchLocation();
@@ -80,8 +90,9 @@ function AddMemoryInputFile() {
     <div>
       <h1>Add Memory</h1>
 
-      <div style={{ marginBottom: '1rem' }}>
+      <div style={{ marginBottom: '1rem', alignContent: 'center', justifyContent: 'center' }}>
         {/* Input akceptuje obrazy i może otworzyć kamerę na telefonie */}
+        
         <input
           type="file"
           accept="image/*"
@@ -90,7 +101,7 @@ function AddMemoryInputFile() {
         />
       </div>
 
-      <div style={{ marginBottom: '1rem', width: '300px', height: '225px', border: '1px solid #ccc' }}>
+      <div style={{ marginBottom: '1rem', width: '300px', height: '225px', border: '0px solid #ccc' }}>
         {photo ? (
           <img
             src={photo}
@@ -98,11 +109,11 @@ function AddMemoryInputFile() {
             style={{ maxWidth: '100%', maxHeight: '100%', display: 'block', margin: 'auto' }}
           />
         ) : (
-          <p style={{ textAlign: 'center' }}>Take, or choose a pic</p>
+          <p style={{ textAlign: 'center', justifyContent: 'center' }}>Take, or choose a pic</p>
         )}
       </div>
 
-      <div style={{ marginBottom: '1rem' }}>
+      <div style={{ marginBottom: '1rem', marginTop: '1rem'}}>
         <label>Description:</label>
         <br />
         <textarea
@@ -116,6 +127,8 @@ function AddMemoryInputFile() {
       </div>
 
       <button onClick={saveMemory}>Save Memory</button>
+      <button onClick={goHome}>Back</button>
+      <button onClick={goAlbum}>Album</button>
     </div>
   );
 }
