@@ -2,6 +2,10 @@ import React, { useState, useEffect, useRef } from 'react';
 import '../App.css';
 import { useNavigate } from 'react-router-dom';
 import moment from 'moment';
+import { FaCamera } from "react-icons/fa";
+import { IoMdPhotos, IoIosArrowRoundBack } from "react-icons/io";
+import { BiSolidPhotoAlbum } from "react-icons/bi";
+import { HiSave } from "react-icons/hi";
 
 function AddMemoryInputFile() {
   const [photo, setPhoto] = useState(null);
@@ -131,9 +135,9 @@ function AddMemoryInputFile() {
       {/* Przyciski, które otwierają odpowiednie inputy */}
       <div style={{ marginBottom: '1rem' }}>
         <button onClick={openCamera} style={{ marginRight: '1rem' }}>
-          Zrób zdjęcie
+        <FaCamera /> <br/>Zrób zdjęcie
         </button>
-        <button onClick={openGallery}>Dodaj zdjęcie</button>
+        <button onClick={openGallery}><IoMdPhotos/> <br />Dodaj zdjęcie</button>
       </div>
 
       <div style={{ marginBottom: '1rem', width: '300px', height: '225px', border: '0px solid #ccc' }}>
@@ -161,9 +165,9 @@ function AddMemoryInputFile() {
         <p><strong>Location:</strong> {location || 'No location'}</p>
       </div>
 
-      <button onClick={saveMemory}>Save Memory</button>
-      <button onClick={goHome}>Back</button>
-      <button onClick={goAlbum}>Album</button>
+      <button onClick={saveMemory}><HiSave/> <br/>Save Memory</button>
+      <button onClick={goHome}><IoIosArrowRoundBack/> <br/>Back</button>
+      <button onClick={goAlbum}><BiSolidPhotoAlbum/> <br/>Album</button>
     </div>
   );
 }

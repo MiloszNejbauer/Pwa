@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import '../App.css';
 import { useNavigate } from 'react-router-dom';
+import { IoIosArrowRoundBack } from 'react-icons/io';
 
 function MemoriesAlbum() {
   const [memories, setMemories] = useState([]);
@@ -36,7 +37,7 @@ function MemoriesAlbum() {
           ))}
         </div>
       )}
-      <button onClick={goHome}>Back</button>
+      <button onClick={goHome}><IoIosArrowRoundBack/> <br/>Back</button>
     </div>
   );
 }
