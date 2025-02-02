@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import { Transition } from 'react-transition-group';
 
 function OnlineStatus() {
   const [isOnline, setIsOnline] = useState(navigator.onLine);
+
+  const [showStatus, setShowStatus] = useState(true);
 
   useEffect(() => {
     const handleOnline = () => setIsOnline(true);
@@ -17,7 +20,21 @@ function OnlineStatus() {
     };
   }, []);
 
-  const statusStyle = {
+  useEffect(() => {
+    setShowStatus(true);
+    const timer = setTimeout(() => {
+      setShowStatus(false);
+    }, 5000);
+
+    return () => clearTimeout(timer);
+    }, [isOnline]);
+  
+
+  const duration = 300;
+
+  const defaultStyle = {
+    transition: `opacity ${duration}ms ease-in-out`,
+    opacity: 0,
     position: 'fixed',
     top: '10px',
     right: '10px',
@@ -28,10 +45,22 @@ function OnlineStatus() {
     zIndex: 1000,
   };
 
+  // Style zależne od stanu animacji
+  const transitionStyles = {
+    entering: { opacity: 1 },
+    entered:  { opacity: 1 },
+    exiting:  { opacity: 0 },
+    exited:  { opacity: 0 },
+  };
+
   return (
-    <div style={statusStyle}>
-      Status: {isOnline ? 'online' : 'offline'}
-    </div>
+    <Transition in={showStatus} timeout={duration} unmountOnExit>
+      {(state) => (
+        <div style={{ ...defaultStyle, ...transitionStyles[state] }}>
+          Status: {isOnline ? 'online' : 'offline'}
+        </div>
+      )}
+    </Transition>
   );
 }
 
