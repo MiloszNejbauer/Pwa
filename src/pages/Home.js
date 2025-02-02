@@ -20,8 +20,8 @@ function Home() {
     <div>
       <h1>Memories App</h1>
       <p>
-        Aplikacja służąca do zapisywania wspomnień w albumie.
-        Zrób lub dodaj zdjęcie, dodaj opis i zapisz swoje wspomnienie.
+      An application for saving memories in an album.
+      Take or add a photo, write a description, and save your memory.
       </p>
       
       <button onClick={goToAddMemory}> <IoAddCircleOutline /> <br/>Add Memory</button>

@@ -41,7 +41,7 @@
   }
 }
 
-/* 1. Globalne reset/normowanie marginesów */
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -50,20 +50,20 @@
   align-items: center;
 }
 
-/* 2. Styl ciała dokumentu: gradient tła i domyślna czcionka */
+
 body {
   font-family: Arial, sans-serif;
-  /* Gradient: start (błękit) -> koniec (ciemny niebieski) */
+
   background: linear-gradient(120deg, #ade0f4 0%, #00264d 100%);
   min-height: 100vh;
-  color: #fff; /* Tekst na jasnym/ciemnym tle */
+  color: #fff; 
   justify-content: center;
   align-items: center;
 }
 
-/* 3. Opcjonalny kontener główny, żeby treść była zwarta */
+
 .container {
-  max-width: 600px; /* max szerokość na desktopie */
+  max-width: 600px;
   margin: 0 auto;
   padding: 1rem;
   display: flex;
@@ -71,7 +71,7 @@ body {
   align-items: center;
 }
 
-/* 4. Nagłówki, odstępy */
+
 h1, h2, h3 {
   margin-bottom: 1rem;
   justify-content: center;
@@ -84,7 +84,7 @@ p {
   align-items: center;
 }
 
-/* 5. Styl przycisków - lekko pomarańczowy */
+
 button {
   background-color: #0000003a; 
   border: none;
@@ -99,10 +99,10 @@ button {
 }
 
 button:hover {
-  opacity: 0.5; /* delikatny efekt przy najechaniu */
+  opacity: 0.5;
 }
 
-/* 6. Tagi input, textarea - podstawowe style */
+
 input {
   width: 100%;
   padding: 0.5rem;
@@ -127,9 +127,8 @@ textarea {
   resize: none;
 }
 
-/* 7. Responsywność 
-   Przy mniejszych ekranach poniżej 600px 
-   zwiększamy wewnętrzne odstępy, zmniejszamy font, itp.
+/* Responsywność przy mniejszych ekranach poniżej 600px 
+   zwiększone wewnętrzne odstępy, zmniejszony font, itp.
 */
 @media (max-width: 600px) {
   .container {
@@ -137,7 +136,7 @@ textarea {
   }
   
   button {
-    width: 100%;  /* przyciski na pełną szerokość na mobilkach */
+    width: 90%;
     margin-right: 0; 
     margin-bottom: 0.5rem;
   }

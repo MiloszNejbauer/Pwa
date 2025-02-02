@@ -13,7 +13,6 @@ function OnlineStatus() {
     window.addEventListener('online', handleOnline);
     window.addEventListener('offline', handleOffline);
 
-    // Czyszczenie po odmontowaniu komponentu
     return () => {
       window.removeEventListener('online', handleOnline);
       window.removeEventListener('offline', handleOffline);
@@ -45,7 +44,7 @@ function OnlineStatus() {
     zIndex: 1000,
   };
 
-  // Style zależne od stanu animacji
+
   const transitionStyles = {
     entering: { opacity: 1 },
     entered:  { opacity: 1 },
