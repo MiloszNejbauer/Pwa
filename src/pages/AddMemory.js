@@ -7,10 +7,12 @@ import { IoMdPhotos, IoIosArrowRoundBack } from "react-icons/io";
 import { BiSolidPhotoAlbum } from "react-icons/bi";
 import { HiSave } from "react-icons/hi";
 
+
 function AddMemoryInputFile() {
   const [photo, setPhoto] = useState(null);
   const [description, setDescription] = useState('');
   const [location, setLocation] = useState('');
+  const [coords, setCoords] = useState({ lat: null, lng: null });
   const [memories, setMemories] = useState(() => {
     const saved = localStorage.getItem('memories');
     return saved ? JSON.parse(saved) : [];
@@ -40,6 +42,7 @@ function AddMemoryInputFile() {
         async (position) => {
           const lat = position.coords.latitude;
           const lng = position.coords.longitude;
+          setCoords({ lat, lng });
 
           try {
             const res = await fetch(
@@ -84,6 +87,8 @@ function AddMemoryInputFile() {
       photo,
       description,
       location,
+      lat: coords.lat,
+      lng: coords.lng,
       createdAt: new moment().format('LLLL'),
     };
     const updatedMemories = [...memories, newMemory];

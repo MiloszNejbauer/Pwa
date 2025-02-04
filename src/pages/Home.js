@@ -3,6 +3,8 @@ import '../App.css';
 import { useNavigate } from 'react-router-dom';
 import { IoAddCircleOutline } from "react-icons/io5";
 import { BiSolidPhotoAlbum } from 'react-icons/bi';
+import { FaMapMarkedAlt } from "react-icons/fa";
+
 
 function Home() {
 
@@ -16,6 +18,10 @@ function Home() {
     navigate('./album');
   }
 
+  const goToMap = () => {
+    navigate('./map');
+  }
+
   return (
     <div>
       <h1>Memories App</h1>
@@ -26,6 +32,7 @@ function Home() {
       
       <button onClick={goToAddMemory}> <IoAddCircleOutline /> <br/>Add Memory</button>
       <button onClick={goToAlbum}><BiSolidPhotoAlbum/> <br/>Album</button>
+      <button onClick={goToMap}><FaMapMarkedAlt/> <br/>Map</button>
       
     </div>
   );
